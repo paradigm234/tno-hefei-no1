@@ -1,145 +1,248 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ASSET_URLS } from '../config/assets';
+import { BookOpen, Settings, Map, Zap } from 'lucide-react';
 
 interface TutorialProps {
   onBackToMenu: () => void;
 }
 
 export default function Tutorial({ onBackToMenu }: TutorialProps) {
+  const [activeTab, setActiveTab] = useState('basics');
+
+  const tabs = [
+    { id: 'basics', label: '基础玩法与数值', icon: <BookOpen className="w-4 h-4" /> },
+    { id: 'systems', label: '国策、顾问与决议', icon: <Settings className="w-4 h-4" /> },
+    { id: 'routes', label: '剧情路线与目标', icon: <Map className="w-4 h-4" /> },
+    { id: 'mechanics', label: '特殊机制指南', icon: <Zap className="w-4 h-4" /> },
+  ];
+
   return (
-    <div className="relative h-screen w-screen overflow-auto bg-[#070a12] text-tno-text crt">
+    <div className="relative h-screen w-screen overflow-hidden bg-[#070a12] text-tno-text crt flex flex-col">
       <div className="pointer-events-none absolute inset-0">
         <img
           src={ASSET_URLS.ui_main_background}
           alt="Tutorial Background"
-          className="h-full w-full object-cover opacity-20"
+          className="h-full w-full object-cover opacity-10"
         />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_24%_15%,rgba(255,76,131,0.16),rgba(6,10,18,0.94)_58%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_24%_15%,rgba(255,76,131,0.12),rgba(6,10,18,0.96)_58%)]" />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 py-6 md:px-8 md:py-8">
-        <div className="mb-6 border border-cyan-300/45 bg-black/55 p-5 backdrop-blur-sm md:mb-8 md:p-7">
-          <p className="mb-2 text-xs uppercase tracking-[0.32em] text-cyan-200/85 md:text-sm">
+      <div className="relative z-10 flex flex-col h-full w-full max-w-6xl mx-auto px-4 py-6 md:px-8 md:py-8">
+        <div className="mb-6 border border-cyan-300/45 bg-black/55 p-5 backdrop-blur-sm shrink-0">
+          <p className="mb-2 text-xs uppercase tracking-[0.32em] text-cyan-200/85">
             Operational Briefing
           </p>
           <h1
-            className="text-3xl font-black tracking-[0.1em] text-white md:text-5xl"
+            className="text-3xl font-black tracking-[0.1em] text-white md:text-4xl"
             style={{ textShadow: '0 0 18px rgba(82,172,255,0.3), 0 0 30px rgba(255,78,126,0.2)' }}
           >
-            教程与作战手册
+            合一风云：新手生存指南
           </h1>
-          <p className="mt-3 max-w-4xl text-sm leading-relaxed text-white/82 md:text-base">
-            本页提供一份可直接上手的实操指南。先看指标，再看节奏，最后看路线分歧。只要能稳定处理危机倒计时，你就能把中后期局势拉回可控区间。
+          <p className="mt-3 text-sm leading-relaxed text-white/82">
+            欢迎来到合肥一中。在这里，你将扮演不同的学生领袖，在重重危机中推行你的理念。本手册将为你详细解析游戏的基础机制、路线分支与特殊玩法。
           </p>
         </div>
 
-        <div className="grid flex-1 grid-cols-1 gap-6 md:grid-cols-[340px_1fr]">
-          <div className="space-y-4">
-            <div className="border border-cyan-300/45 bg-black/60 p-3">
-              <img
-                src={ASSET_URLS.ui_thumbnail_1}
-                alt="System"
-                className="h-44 w-full object-cover md:h-52"
-              />
-              <p className="mt-2 text-center text-xs uppercase tracking-[0.18em] text-cyan-100/85 md:text-sm">
-                系统指标与资源循环
-              </p>
-            </div>
-            <div className="border border-cyan-300/45 bg-black/60 p-3">
-              <img
-                src={ASSET_URLS.ui_thumbnail_2}
-                alt="Factions"
-                className="h-44 w-full object-cover md:h-52"
-              />
-              <p className="mt-2 text-center text-xs uppercase tracking-[0.18em] text-cyan-100/85 md:text-sm">
-                派系竞争与政治操作
-              </p>
-            </div>
-            <div className="border border-cyan-300/45 bg-black/60 p-3">
-              <img
-                src={ASSET_URLS.ui_thumbnail_3}
-                alt="Strategy"
-                className="h-44 w-full object-cover md:h-52"
-              />
-              <p className="mt-2 text-center text-xs uppercase tracking-[0.18em] text-cyan-100/85 md:text-sm">
-                国策路径与风险窗口
-              </p>
+        <div className="flex flex-1 min-h-0 gap-6 flex-col md:flex-row">
+          {/* Sidebar Tabs */}
+          <div className="w-full md:w-64 shrink-0 flex flex-col gap-2">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-3 px-4 py-3 border text-left transition-all duration-200 ${
+                  activeTab === tab.id
+                    ? 'border-cyan-400 bg-cyan-900/40 text-cyan-100 shadow-[0_0_15px_rgba(34,211,238,0.2)]'
+                    : 'border-white/10 bg-black/40 text-white/60 hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                {tab.icon}
+                <span className="font-bold tracking-wider text-sm">{tab.label}</span>
+              </button>
+            ))}
+            
+            <div className="mt-auto pt-4">
+              <button
+                onClick={onBackToMenu}
+                className="w-full border border-pink-500/50 bg-black/60 px-4 py-3 text-sm font-bold tracking-widest text-pink-200 transition-all hover:bg-pink-900/40 hover:text-white"
+              >
+                返回主菜单
+              </button>
             </div>
           </div>
 
-          <div className="border border-cyan-300/45 bg-black/62 p-5 backdrop-blur-sm md:p-7">
-            <div className="space-y-6 leading-relaxed">
-              <section>
-                <h2 className="mb-2 text-xl font-bold tracking-[0.08em] text-cyan-200 md:text-2xl">一、核心指标如何理解</h2>
-                <p className="text-white/85">
-                  PP 决定你能否持续执行决议和关键动作；稳定度是系统容错上限；学生支持度决定事件处理后的反噬强度；TPR 是多数策略的资源底盘。
-                  实战里优先级通常是：先保稳定度不崩，再保 TPR 不断，再用 PP 做节奏调度。
-                </p>
-                <ul className="mt-2 list-disc space-y-1 pl-5 text-white/80">
-                  <li>PP 低于 0 时操作空间会被严重压缩。</li>
-                  <li>TPR 长期见底会触发连锁惩罚，后续很难修复。</li>
-                  <li>稳定度和学生理智过低会拉高高风险事件权重。</li>
-                </ul>
-              </section>
+          {/* Content Area */}
+          <div className="flex-1 border border-cyan-300/30 bg-black/60 backdrop-blur-md overflow-y-auto p-6 md:p-8 custom-scrollbar">
+            {activeTab === 'basics' && (
+              <div className="space-y-8 animate-fade-in">
+                <section>
+                  <h2 className="text-2xl font-bold text-cyan-300 mb-4 border-b border-cyan-300/20 pb-2">游戏目标</h2>
+                  <p className="text-white/85 leading-relaxed">
+                    在合肥一中这片充满矛盾的校园里，你将扮演不同的领导人（如潘仁越、王兆凯、狗熊等），通过推行政策、应对危机，最终达成你的政治或生存目标。游戏以时间推进，你需要时刻关注右上角的各项数值。
+                  </p>
+                </section>
 
-              <section>
-                <h2 className="mb-2 text-xl font-bold tracking-[0.08em] text-cyan-200 md:text-2xl">二、派系不只是立场标签</h2>
-                <p className="text-white/85">
-                  各路线的核心区别在于“如何交换成本”。民主线用效率换稳定，极权线用稳定换后期风险，资本线用收益换社会承压。路线选定后，决议风格要一致，否则会出现指标互相打架。
-                </p>
-                <ul className="mt-2 list-disc space-y-1 pl-5 text-white/80">
-                  <li>路线切换窗口通常在重大事件节点前后出现。</li>
-                  <li>不要同时追求高集权与高团结，两者天然冲突。</li>
-                  <li>先决定结局方向，再倒推国策顺序。</li>
-                </ul>
-              </section>
+                <section>
+                  <h2 className="text-2xl font-bold text-cyan-300 mb-4 border-b border-cyan-300/20 pb-2">核心数值解析</h2>
+                  <div className="grid gap-4">
+                    <div className="bg-white/5 p-4 border-l-2 border-yellow-400">
+                      <h3 className="font-bold text-yellow-400 mb-1">PP (政治点数)</h3>
+                      <p className="text-sm text-white/80">最重要的资源。用于点国策、雇佣顾问、执行决议。如果PP为负，你将寸步难行。每日会自动增长，但也会受到负面状态扣除。</p>
+                    </div>
+                    <div className="bg-white/5 p-4 border-l-2 border-blue-400">
+                      <h3 className="font-bold text-blue-400 mb-1">TPR (做题力)</h3>
+                      <p className="text-sm text-white/80">学校的根本产出。某些路线（如及第）极度依赖TPR，而某些路线（如真左）则试图摧毁它。过低的TPR会引来校方的严厉镇压。</p>
+                    </div>
+                    <div className="bg-white/5 p-4 border-l-2 border-green-400">
+                      <h3 className="font-bold text-green-400 mb-1">稳定度 (Stability)</h3>
+                      <p className="text-sm text-white/80">代表校园的秩序。稳定度过低会导致各种负面事件、暴乱，甚至直接Game Over。请务必将其保持在安全线（通常是50%）以上。</p>
+                    </div>
+                    <div className="bg-white/5 p-4 border-l-2 border-purple-400">
+                      <h3 className="font-bold text-purple-400 mb-1">其他关键数值</h3>
+                      <ul className="list-disc pl-5 text-sm text-white/80 space-y-1 mt-2">
+                        <li><strong className="text-white">学生支持度</strong>：代表普通学生对你的认可。支持度高可以解锁特定选项，降低暴乱风险。</li>
+                        <li><strong className="text-white">学生理智值</strong>：代表学生们的精神状态。理智值过低会导致极端事件频发。</li>
+                        <li><strong className="text-white">激进愤怒度</strong>：特定路线（如真左派）的专属数值。过高会导致极左暴动，过低则改革停滞。</li>
+                      </ul>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            )}
 
-              <section>
-                <h2 className="mb-2 text-xl font-bold tracking-[0.08em] text-cyan-200 md:text-2xl">三、国策是节奏控制器</h2>
-                <p className="text-white/85">
-                  国策不只是加成按钮，而是整局推进节拍器。先处理会触发危机倒计时或机制解锁的节点，再处理纯收益节点。遇到资源吃紧时，优先选择低成本且能缓解当前压力的国策。
-                </p>
-                <ul className="mt-2 list-disc space-y-1 pl-5 text-white/80">
-                  <li>开局 30 天重点：稳住 PP 和稳定度。</li>
-                  <li>中局重点：补足 TPR 并控制危机数量。</li>
-                  <li>后期重点：围绕目标结局进行单线冲刺。</li>
-                </ul>
-              </section>
+            {activeTab === 'systems' && (
+              <div className="space-y-8 animate-fade-in">
+                <section>
+                  <h2 className="text-2xl font-bold text-cyan-300 mb-4 border-b border-cyan-300/20 pb-2">国策树 (Focus Tree)</h2>
+                  <p className="text-white/85 leading-relaxed mb-4">
+                    国策是游戏推进的主轴。点击左侧边栏的“国策树”图标打开。每个国策需要消耗一定天数，完成后会提供强大的增益、触发关键剧情或解锁新机制。
+                  </p>
+                  <div className="bg-cyan-900/20 p-4 border border-cyan-500/30 text-sm text-cyan-100">
+                    <strong>新手提示：</strong> 请务必保持国策始终在研究中。优先选择能缓解当前危机或解锁关键剧情的国策，而不是盲目追求数值加成。
+                  </div>
+                </section>
 
-              <section>
-                <h2 className="mb-2 text-xl font-bold tracking-[0.08em] text-cyan-200 md:text-2xl">四、常见失败路径</h2>
-                <p className="text-white/85">
-                  绝大多数失败都不是一次事件导致，而是三到五次错误决策叠加。常见问题是：只顾短期收益、忽略倒计时危机、在低资源状态下强行扩张。
-                </p>
-                <ul className="mt-2 list-disc space-y-1 pl-5 text-white/80">
-                  <li>看到危机天数进入 15 天内，优先处理危机。</li>
-                  <li>当 PP 与 TPR 同时走低，应立刻进入保守节奏。</li>
-                  <li>每月检查一次资源趋势，避免“慢性崩盘”。</li>
-                </ul>
-              </section>
+                <section>
+                  <h2 className="text-2xl font-bold text-cyan-300 mb-4 border-b border-cyan-300/20 pb-2">顾问系统 (Advisors)</h2>
+                  <p className="text-white/85 leading-relaxed mb-4">
+                    在左侧边栏可以花费PP雇佣顾问。顾问不仅提供每日的数值加成（如每日PP+0.1，稳定度+0.2）。
+                  </p>
+                  <div className="bg-pink-900/20 p-4 border border-pink-500/30 text-sm text-pink-100">
+                    <strong>隐藏机制：</strong> 某些特定顾问（如周晨、尤光雷、狗熊）在特定领导人执政时被雇佣，会触发专属的隐藏剧情，甚至解锁隐藏的国策分支！
+                  </div>
+                </section>
 
-              <section>
-                <h2 className="mb-2 text-xl font-bold tracking-[0.08em] text-cyan-200 md:text-2xl">五、推荐开局顺序（新手）</h2>
-                <p className="text-white/85">
-                  第一阶段建议以稳态为主：先保证日常资源净增长，再逐步推进路线核心节点。遇到剧情分支时，优先选能降低后续不确定性的选项。
-                </p>
-                <ol className="mt-2 list-decimal space-y-1 pl-5 text-white/80">
-                  <li>先把稳定度和 PP 拉到安全区。</li>
-                  <li>国策选择以“危机缓解 + 资源补给”为先。</li>
-                  <li>确认路线后，集中资源推进关键分支。</li>
-                </ol>
-              </section>
-            </div>
+                <section>
+                  <h2 className="text-2xl font-bold text-cyan-300 mb-4 border-b border-cyan-300/20 pb-2">决议与危机 (Decisions & Crises)</h2>
+                  <p className="text-white/85 leading-relaxed">
+                    在右侧边栏可以查看当前的决议和危机。
+                  </p>
+                  <ul className="list-disc pl-5 text-sm text-white/80 space-y-2 mt-3">
+                    <li><strong>决议</strong>：消耗PP来换取短期收益或应对危机的手段。例如“镇压抗议”可以消耗PP换取稳定度。合理使用决议是度过资源真空期的关键。</li>
+                    <li><strong>危机倒计时</strong>：屏幕右侧会显示当前的危机。如果倒计时结束前未能满足条件（通常是通过点特定国策或决议来解决），将会触发严重的惩罚甚至导致游戏失败。看到危机天数进入15天内，必须优先处理！</li>
+                  </ul>
+                </section>
+              </div>
+            )}
+
+            {activeTab === 'routes' && (
+              <div className="space-y-8 animate-fade-in">
+                <section>
+                  <h2 className="text-2xl font-bold text-cyan-300 mb-4 border-b border-cyan-300/20 pb-2">剧情路线概览</h2>
+                  <p className="text-white/85 leading-relaxed mb-6">
+                    游戏包含多条截然不同的剧情路线，通常在游戏初期的关键事件（如“B3起义”或“礼堂冲突”）中产生分歧。不同的路线有着完全不同的玩法和最终目标。
+                  </p>
+
+                  <div className="space-y-6">
+                    <div className="border border-blue-500/30 bg-blue-900/10 p-5">
+                      <h3 className="text-xl font-bold text-blue-400 mb-2">潘仁越路线（自由派/民主派）</h3>
+                      <p className="text-sm text-white/80 mb-2"><strong>目标：</strong> 建立学生代表大会，实现校园民主化，调和各方矛盾。</p>
+                      <p className="text-sm text-white/80"><strong>特点：</strong> 核心玩法是“学生代表大会”。你需要平衡各方势力（保皇派、激进派等），在议会中争取多数席位以通过法案。这是一条考验平衡木技巧的路线。</p>
+                    </div>
+
+                    <div className="border border-red-500/30 bg-red-900/10 p-5">
+                      <h3 className="text-xl font-bold text-red-400 mb-2">王兆凯路线（真左派/先锋队）</h3>
+                      <p className="text-sm text-white/80 mb-2"><strong>目标：</strong> 彻底推翻现有的做题体制，建立学生公社。</p>
+                      <p className="text-sm text-white/80"><strong>特点：</strong> 核心玩法是“题改委”。你需要控制“激进愤怒度”，既要利用学生的怒火推进改革，又要防止怒火失控演变成极左暴动。武德充沛，对抗激烈。</p>
+                    </div>
+
+                    <div className="border border-gray-500/30 bg-gray-900/30 p-5">
+                      <h3 className="text-xl font-bold text-gray-400 mb-2">杨玉乐路线（反动派派/保皇派）</h3>
+                      <p className="text-sm text-white/80 mb-2"><strong>目标：</strong> 帮助特级教师杨玉乐评上正高级教师。</p>
+                      <p className="text-sm text-white/80"><strong>特点：</strong> “软性维稳”的同时，镇压钢铁红蛤学生运动，保持老特级身体健康的同时努力评上正高级教师，为自己的脸面和教师生涯而战。</p>
+                    </div>
+
+                    <div className="border border-pink-500/30 bg-pink-900/10 p-5">
+                      <h3 className="text-xl font-bold text-pink-400 mb-2">狗熊路线（抽象派/乐子人）</h3>
+                      <p className="text-sm text-white/80 mb-2"><strong>目标：</strong> 将校园变成二次元的“地上天国”，进行赛博解构。</p>
+                      <p className="text-sm text-white/80"><strong>特点：</strong> 极其特殊的玩法。你需要管理狗熊的“理智值”，通过“赛博解构”看番，并在“Galgame”系统中攻略女角色。理智值归零将触发精神病结局。</p>
+                    </div>
+
+                    <div className="border border-yellow-500/30 bg-yellow-900/10 p-5">
+                      <h3 className="text-xl font-bold text-yellow-400 mb-2">及第路线（资本派）</h3>
+                      <p className="text-sm text-white/80 mb-2"><strong>目标：</strong> 将学校彻底商业化，垄断教育资源，实现“及第之梦”。</p>
+                      <p className="text-sm text-white/80"><strong>特点：</strong> 经营及第企业，研发教辅资料，抢占市场份额。玩法偏向模拟经营。最后见证私有化合一的终局。</p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            )}
+
+            {activeTab === 'mechanics' && (
+              <div className="space-y-8 animate-fade-in">
+                <section>
+                  <h2 className="text-2xl font-bold text-cyan-300 mb-4 border-b border-cyan-300/20 pb-2">特殊机制指南</h2>
+                  <p className="text-white/85 leading-relaxed mb-6">
+                    随着剧情推进，你将解锁各种特殊界面。它们通常位于屏幕左侧或右侧的快捷按钮中。
+                  </p>
+
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <div className="bg-black/40 border border-white/10 p-4">
+                      <h3 className="font-bold text-blue-300 mb-2">学生代表大会</h3>
+                      <p className="text-xs text-white/60 mb-2">进入条件：潘仁越路线</p>
+                      <p className="text-sm text-white/80">
+                        提出法案并进行表决。你需要通过决议或事件来拉拢不同派系（如温和派、激进派），确保你的法案能获得半数以上的赞成票。法案通过可获得强大的全局增益。
+                      </p>
+                    </div>
+
+                    <div className="bg-black/40 border border-white/10 p-4">
+                      <h3 className="font-bold text-red-300 mb-2">做题体制改革委员会</h3>
+                      <p className="text-xs text-white/60 mb-2">进入条件：王兆凯路线</p>
+                      <p className="text-sm text-white/80">
+                        平衡“改革进度”与“激进愤怒度”。推行激进改革会增加愤怒度，愤怒度满100会触发极左危机倒计时。你需要适时进行“路线纠偏”来降温。
+                      </p>
+                    </div>
+
+                    <div className="bg-black/40 border border-white/10 p-4">
+                      <h3 className="font-bold text-pink-300 mb-2">赛博解构与Galgame</h3>
+                      <p className="text-xs text-white/60 mb-2">进入条件：狗熊路线</p>
+                      <p className="text-sm text-white/80">
+                        消耗PP进行“赛博解构”（看番）来恢复狗熊的理智值；在Galgame界面与角色聊天，提升好感度。注意：好感度过低时强行聊天会被拉黑！
+                      </p>
+                    </div>
+
+                    <div className="bg-black/40 border border-white/10 p-4">
+                      <h3 className="font-bold text-yellow-300 mb-2">及第企业管理</h3>
+                      <p className="text-xs text-white/60 mb-2">进入条件：及第路线</p>
+                      <p className="text-sm text-white/80">
+                        管理资金、市场份额和公关值。投资研发新教辅，打击竞争对手。市场份额归零会导致企业破产。
+                      </p>
+                    </div>
+
+                    <div className="bg-black/40 border border-white/10 p-4 md:col-span-2">
+                      <h3 className="font-bold text-cyan-300 mb-2">突发小游戏（频率战/阵地战/谈判）</h3>
+                      <p className="text-xs text-white/60 mb-2">触发条件：特定剧情节点自动弹出</p>
+                      <p className="text-sm text-white/80">
+                        <strong>频率战：</strong> 抢夺广播频道，点击正确的频段来压制对手。<br/>
+                        <strong>阵地战：</strong> 分配兵力攻守教学楼，注意兵种克制和士气。<br/>
+                        <strong>谈判：</strong> 根据对方的性格和当前局势，选择合适的对话策略，施压或妥协。
+                      </p>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            )}
           </div>
-        </div>
-
-        <div className="mt-6 flex justify-center md:mt-8">
-          <button
-            onClick={onBackToMenu}
-            className="border border-cyan-200 bg-black/75 px-8 py-3 text-sm font-bold uppercase tracking-[0.22em] text-cyan-100 transition-all duration-300 hover:border-pink-300 hover:bg-pink-500/20 hover:text-white md:text-base"
-          >
-            返回主菜单
-          </button>
         </div>
       </div>
     </div>
